@@ -28,7 +28,7 @@ export default function Login(props: UserFormProps) {
         <div className="login">
             Login:
             <form onSubmit={event => handleLoginSubmit(event)}>
-                <div className="input">
+                <div className="input w-full max-w-xs">
                     <label>Nome: </label>
                     <input type="text" onChange={event => setNome(event.target.value)}></input>
                 </div>

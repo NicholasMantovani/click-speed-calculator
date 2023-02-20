@@ -23,7 +23,6 @@ function App() {
       {isLogged && user ?
         <div> L'utente loggato si chiama {user.name} {user.surname} <FastClicking /></div>
 
-
         : <Login onAddUser={handleUserAdd} />
       }
     </>
