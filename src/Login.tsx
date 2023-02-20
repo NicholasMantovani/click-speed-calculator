@@ -25,18 +25,24 @@ export default function Login(props: UserFormProps) {
     }
 
     return (
-        <div className="login">
-            Login:
+        <div className="p-5 text-center">
+            <h1 className="text-xl">Esegui l'accesso</h1>
             <form onSubmit={event => handleLoginSubmit(event)}>
-                <div className="input w-full max-w-xs">
-                    <label>Nome: </label>
-                    <input type="text" onChange={event => setNome(event.target.value)}></input>
-                </div>
-                <div className="input">
-                    <label>Cognome: </label>
-                    <input type="text" onChange={event => setCognome(event.target.value)}></input>
-                </div>
-                <button type="submit">Login</button>
+            <div className="form-control w-full max-w-xs">
+                <label className="label">
+                    <span className="label-text">Nome</span>
+                </label>
+                <input type="text" placeholder="Type here" className="input input-bordered w-full max-w-xs" onChange={event => setNome(event.target.value)}></input>
+            </div>
+            <div className="form-control w-full max-w-xs">
+                <label className="label">
+                    <span className="label-text">Cognome</span>
+                </label>
+                <input type="text" placeholder="Type here" className="input input-bordered w-full max-w-xs" onChange={event => setCognome(event.target.value)}></input>
+            </div>
+            <div className="p-5">
+                <button type="submit" className="btn">Login</button>
+            </div>
             </form>
         </div>
     )

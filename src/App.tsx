@@ -8,7 +8,7 @@ import Login, { User } from './Login';
 
 function App() {
 
-  const [isLogged, setIsLogged] = useState(true)
+  const [isLogged, setIsLogged] = useState(false)
   const [user, setLoggedUser] = useState<User>({ name: 'nicholas', surname: 'mantovani' } as User)
 
 
@@ -19,13 +19,13 @@ function App() {
 
 
   return (
-    <>
+    <div className="flex justify-center flex-col items-center">
       {isLogged && user ?
         <div> L'utente loggato si chiama {user.name} {user.surname} <FastClicking /></div>
 
         : <Login onAddUser={handleUserAdd} />
       }
-    </>
+    </div>
   );
 }
 

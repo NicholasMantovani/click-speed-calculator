@@ -1,12 +1,15 @@
 import React, { useState } from "react"
+import useWebSocket from "react-use-websocket";
 
 
 export default function FastClicking() {
     const timeTreshold = 2000 //time in millis
 
-    const [users, setUsers] = useState([])
     const [startTime, setStartTime] = useState(0)
     const [speedClick, setSpeedClick] = useState<Array<Number>>([])
+
+    const { sendMessage, lastMessage, readyState } = useWebSocket('wss://echo.websocket.org');
+
 
     function handleOnClick() { 
         let timeNow = new Date().getTime()
@@ -16,6 +19,7 @@ export default function FastClicking() {
             setStartTime(Object.assign({}, timeNow))
             if(speedClick.length >= 10) {
                 console.log(speedClick)
+                sendMessage(JSON.stringify(speedClick))
                 setSpeedClick([])
             }
         } else {
