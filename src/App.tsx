@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import addUserToDatabase from './ApiServices';
-import handleUserAdd from './ApiServices';
 import './App.css';
 import FastClicking from './Fastclicking';
 import Login, { User } from './Login';
@@ -8,7 +7,7 @@ import Login, { User } from './Login';
 
 function App() {
 
-  const [isLogged, setIsLogged] = useState(false)
+  const [isLogged, setIsLogged] = useState(true)
   const [user, setLoggedUser] = useState<User>({ name: 'nicholas', surname: 'mantovani' } as User)
 
 
