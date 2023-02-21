@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import addUserToDatabase from './ApiServices';
-import './App.css';
 import FastClicking from './Fastclicking';
 import Login, { User } from './Login';
 
