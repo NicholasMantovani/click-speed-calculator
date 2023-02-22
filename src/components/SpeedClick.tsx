@@ -1,24 +1,16 @@
-import { useEffect, useState } from "react"
-import useWebSocket, { ReadyState } from "react-use-websocket";
+import { useState } from "react"
+import { addClicksToDatabase } from "../services/ApiServices";
+import { SpeedClickProps } from "../types/types";
 import Chart from "./Chart";
 
 
-export default function FastClicking() {
+export default function SpeedClick(props: SpeedClickProps) {
     const timeTreshold = 2000 //time in millis
 
     const [startTime, setStartTime] = useState(0)
     const [speedClick, setSpeedClick] = useState<Array<number>>([])
     const [totalClicks, setTotalClicks] = useState(0)
-    const [allclicks, setAllClicks] = useState<Array<number>>([])
 
-    const { sendMessage, lastMessage, readyState } = useWebSocket('ws://172.31.11.26:8080/as');
-
-
-    useEffect(() => {
-        if (lastMessage !== null) {
-            setAllClicks((prev) => [...prev, ...JSON.parse(lastMessage.data)]);
-        }
-    }, [lastMessage]);
 
     function handleOnClick() {
         let timeNow = new Date().getTime()
@@ -38,17 +30,10 @@ export default function FastClicking() {
     }
 
     async function handleSendMessage(speedClicks: Array<Number>) {
-        setAllClicks((prev) => [...prev, ...speedClick])
-        sendMessage(JSON.stringify(speedClick))
+        addClicksToDatabase({ userId: props.username, times: speedClick })
     }
 
-    const connectionStatus = {
-        [ReadyState.CONNECTING]: 'Connecting',
-        [ReadyState.OPEN]: 'Open',
-        [ReadyState.CLOSING]: 'Closing',
-        [ReadyState.CLOSED]: 'Closed',
-        [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
-    }[readyState];
+
 
     return (
         <>
@@ -56,7 +41,6 @@ export default function FastClicking() {
                 <div className="card-body">
                     <h2 className="card-title">Quanto sei veloce a cliccare?</h2>
                     <p>Metti alla prova le tue abilità vedremo chi è il più veloce</p>
-                    Connection status: {connectionStatus}
                     <div className="card-actions justify-center p-5">
                         <button className="btn btn-primary" onClick={() => handleOnClick()}> Clicca qui</button>
                         {totalClicks}
@@ -64,7 +48,7 @@ export default function FastClicking() {
                 </div>
 
             </div>
-            <Chart speedClicks={[...allclicks]} />
+            <Chart />
         </>
     )
 }
