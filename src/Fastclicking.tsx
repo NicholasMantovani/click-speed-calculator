@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import useWebSocket, { ReadyState } from "react-use-websocket";
-import { boolean } from "yargs";
 import Chart from "./Chart";
 
 
@@ -12,7 +11,7 @@ export default function FastClicking() {
     const [totalClicks, setTotalClicks] = useState(0)
     const [allclicks, setAllClicks] = useState<Array<number>>([])
 
-    const { sendMessage, lastMessage, readyState } = useWebSocket('wss://socketsbay.com/wss/v2/1/demo/');
+    const { sendMessage, lastMessage, readyState } = useWebSocket('ws://172.31.11.26:8080/as');
 
 
     useEffect(() => {
