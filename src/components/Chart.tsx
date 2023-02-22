@@ -34,7 +34,7 @@ export default function Chart() {
     const options: ApexOptions = {
         chart: {
             id: 'basic-char',
-            height: 350,
+            height: 400,
             type: 'bar',
             zoom: {
                 enabled: true
@@ -57,27 +57,33 @@ export default function Chart() {
     }]
 
     return (
-        <>
-            <h1 className="text-2xl">Risultati</h1>
-            Stato websocket: {connectionStatus}
-            <ReactApexChart
-                options={options}
-                series={seriesClicks}
-                type="bar"
-                height={350}
-            />
+        <div className="pt-5">
+            <div className="card w-96 bg-neutral shadow-xl">
+                <div className="card-body">
+                    <h2 className="card-title">Classifica</h2>
+                    <p>Stato websocket: {connectionStatus}</p>
+                    <div className="card-actions justify-center p-5">
+                        <ReactApexChart
+                            options={options}
+                            series={seriesClicks}
+                            type="bar"
+                            height={350}
+                        />
+                    </div>
+                    <div className="stats shadowstats-vertical shadow">
+                        {info && Array.from(Object.keys(info)).map((key) => {
+                            const value = info[key] as string
+                            return (
+                                <div className="stat">
+                                    <div className="stat-value">{key}</div>
+                                    <div className="stat-title">{value}</div>
 
-            <div className="stat">
-                {info && Array.from(Object.keys(info)).map((key) => {
-                    const value = info[key] as string
-                    return (<>
-                        <div className="stat-title">{key}</div>
-                        <div className="stat-value">{value}</div>
-                    </>)
-                })};
+                                </div>)
+                        })}
+                    </div>
+                </div>
             </div>
-
-        </>
+        </div>
     )
 
 }

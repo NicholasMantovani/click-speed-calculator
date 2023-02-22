@@ -16,9 +16,10 @@ function App() {
 
 
   return (
-    <div className="flex justify-center flex-col items-center">
+    <div className="flex justify-center flex-col items-center text-center">
       {user.id !== undefined ?
-        <div> Buongiorno {user.name} {user.surname}
+        <div p-5 text-center>
+          <h1 className="text-2xl"> Ciao {user.name} {user.surname} </h1>
           <SpeedClick username={user.id} /></div>
         : <Login onAddUser={handleUserAdd} />
       }
