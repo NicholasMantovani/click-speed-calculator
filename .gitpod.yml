@@ -6,6 +6,11 @@
 
 tasks:
   - init: npm install && npm run build
-    command: npm run start
+    command: npm run start4
+
+additionalRepositories:
+  - url: https://github.com/diegorigo90/click-speed-backend
+    # checkoutLocation is relative to /workspaces
+    checkoutLocation: backend
 
 
