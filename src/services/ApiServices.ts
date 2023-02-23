@@ -20,7 +20,7 @@ export function addUserToDatabase(user: User) {
     return output;
 }
 
-export function addClicksToDatabase(timeInput: TimesInput) {
+export async function addClicksToDatabase(timeInput: TimesInput) {
     fetch("http://localhost:8080/clicks", {
         headers: new Headers({ 'content-type': 'application/json' }),
         method: "POST",
