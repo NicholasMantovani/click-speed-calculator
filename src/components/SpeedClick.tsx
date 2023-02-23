@@ -36,10 +36,10 @@ export default function SpeedClick(props: SpeedClickProps) {
         <>
             <div className="card w-96 bg-neutral shadow-xl">
                 <div className="card-body">
-                    <h2 className="card-title">Quanto sei veloce a cliccare?</h2>
+                    <h2 className="card-title title">Quanto sei veloce a cliccare?</h2>
                     <p>Metti alla prova le tue abilità vedremo chi è il più veloce</p>
                     <div className="card-actions justify-center p-5">
-                        <button className="btn btn-primary btn-wide btn-lg" onClick={() => handleOnClick()}> Clicca qui</button>
+                        <button className="btn btn-wide test" onClick={() => handleOnClick()}> Clicca qui</button>
                     </div>
                     <p>Click totali: {totalClicks}</p>
                 </div>

@@ -62,7 +62,7 @@ export default function Chart() {
         <div className="pt-5">
             <div className="card w-96 bg-neutral shadow-xl">
                 <div className="card-body">
-                    <h2 className="card-title">Classifica</h2>
+                    <h2 className="card-title title">Classifica</h2>
                     <p>Stato websocket: {connectionStatus}</p>
                     <div className="card-actions justify-center p-5">
                         <ReactApexChart
