@@ -12,7 +12,7 @@ export default function SpeedClick(props: SpeedClickProps) {
     const [totalClicks, setTotalClicks] = useState(0)
 
 
-    function handleOnClick() {
+    async function handleOnClick() {
         let timeNow = new Date().getTime()
 
         if (timeNow - startTime < timeTreshold) {

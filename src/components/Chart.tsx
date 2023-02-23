@@ -11,7 +11,9 @@ export default function Chart() {
     const [series, setSeries] = useState<Array<number>>([])
     const [info, setInfo] = useState<any>()
 
-    const { lastMessage, readyState } = useWebSocket('ws://localhost:8080/clickspeed');
+    const ip = window.location.host
+
+    const { lastMessage, readyState } = useWebSocket('ws://' + ip + '/clickspeed');
 
     useEffect(() => {
         if (lastMessage !== null) {

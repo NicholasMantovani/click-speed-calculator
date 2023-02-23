@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { LoginProps, User } from "../types/types";
 
+export const originLocation = window.location.origin
+
 export default function Login(props: LoginProps) {
     const [nome, setNome] = useState("");
     const [cognome, setCognome] = useState("");
