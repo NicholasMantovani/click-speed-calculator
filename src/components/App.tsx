@@ -21,7 +21,7 @@ function App() {
           user.id !== undefined ?
           <div className="p-5 text-center">
             <h1 className="text-2xl p-2"> Ciao {user.name} {user.surname} </h1>
-            <SpeedClick username="Cippa" />
+            <SpeedClick username={user.id} />
           </div>
           : <Login onAddUser={handleUserAdd} />
       }
