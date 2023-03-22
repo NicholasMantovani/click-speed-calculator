@@ -1,5 +1,5 @@
 import { originLocation } from "../components/Login";
-import { TimesInput, User } from "../types/types";
+import { User } from "../types/types";
 
 export function addUserToDatabase(user: User) {
 
@@ -20,13 +20,4 @@ export function addUserToDatabase(user: User) {
             }
         );
     return output;
-}
-
-export async function addClicksToDatabase(timeInput: TimesInput) {
-    fetch(originLocation + "/clicks", {
-        headers: new Headers({ 'content-type': 'application/json' }),
-        method: "POST",
-        body: JSON.stringify(timeInput),
-        mode: "cors"
-    })
 }

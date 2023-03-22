@@ -1,7 +1,8 @@
+import React, { useMemo } from "react";
 import { useState } from "react"
-import { addClicksToDatabase } from "../services/ApiServices";
 import { SpeedClickProps } from "../types/types";
 import Chart from "./Chart";
+import { originLocation } from "./Login";
 
 
 export default function SpeedClick(props: SpeedClickProps) {
@@ -11,6 +12,12 @@ export default function SpeedClick(props: SpeedClickProps) {
     const [speedClick, setSpeedClick] = useState<Array<number>>([])
     const [totalClicks, setTotalClicks] = useState(0)
 
+
+
+    const worker: Worker = useMemo(
+        () => new Worker('worker.js'),
+        []
+    );
 
     async function handleOnClick() {
         let timeNow = new Date().getTime()
@@ -29,7 +36,7 @@ export default function SpeedClick(props: SpeedClickProps) {
     }
 
     async function handleSendMessage(speedClicks: Array<Number>) {
-        addClicksToDatabase({ userId: props.username, times: speedClick })
+        worker.postMessage({ userId: props.username, times: speedClick, origin: originLocation })
     }
 
     return (
