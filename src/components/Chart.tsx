@@ -3,13 +3,15 @@ import { ApexOptions } from "apexcharts";
 import { useState, useEffect } from "react";
 import ReactApexChart from "react-apexcharts";
 import useWebSocket, { ReadyState } from "react-use-websocket";
-import { Data } from "../types/types";
+import { Data, SpeedClickProps, UserBestTime } from "../types/types";
 
-export default function Chart() {
+export default function Chart(props: SpeedClickProps) {
 
     const [categories, setCategories] = useState<Array<number>>([])
     const [series, setSeries] = useState<Array<number>>([])
     const [info, setInfo] = useState<any>()
+    const [classification, setClassification] = useState<Array<UserBestTime>>()
+
 
     const ip = window.location.host
 
@@ -21,6 +23,8 @@ export default function Chart() {
             setCategories(data.payload.x)
             setSeries(data.payload.y)
             setInfo(data.payload.info)
+            setClassification(data.payload.classification)
+
         }
     }, [lastMessage]);
 
@@ -45,7 +49,7 @@ export default function Chart() {
         plotOptions: {
             bar: {
                 borderRadius: 4,
-                horizontal: true,
+                horizontal: false,
             }
         },
         xaxis: {
@@ -60,11 +64,16 @@ export default function Chart() {
 
     return (
         <div className="pt-5">
-            <div className="card w-96 bg-neutral shadow-xl">
+            <div className="card w-100 bg-neutral shadow-xl">
                 <div className="card-body">
                     <h2 className="card-title title">Classifica</h2>
                     <p>Stato websocket: {connectionStatus}</p>
                     <div className="card-actions justify-center p-5">
+                        <ul className="menu bg-base-100 w-56 rounded-box">
+                            {classification && classification.map(userBestTime => (
+                                <li className={props.username === userBestTime.userId ? 'text-xl font-extrabold' : undefined} key={userBestTime.userId}> {userBestTime.time}ms - {userBestTime.user} </li>
+                            ))}
+                        </ul>
                         <ReactApexChart
                             options={options}
                             series={seriesClicks}
@@ -72,6 +81,7 @@ export default function Chart() {
                             height={350}
                         />
                     </div>
+
                     <div className="stats shadowstats-vertical shadow">
                         {info && Array.from(Object.keys(info)).map((key) => {
                             const value = info[key] as string

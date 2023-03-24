@@ -24,5 +24,13 @@ export interface Data {
 export interface Payload {
     x: Array<number>,
     y: Array<number>,
-    info: Map<string, string>
+    info: Map<string, string>,
+    classification: Array<UserBestTime>
+}
+
+
+export interface UserBestTime {
+    time: number,
+    user: string,
+    userId: string
 }

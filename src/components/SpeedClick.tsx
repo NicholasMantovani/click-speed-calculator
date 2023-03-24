@@ -15,19 +15,19 @@ export default function SpeedClick(props: SpeedClickProps) {
 
 
     const worker: Worker = useMemo(
-        () => new Worker('worker.js'),
+        () => new Worker('Worker.js'),
         []
     );
 
-    async function handleOnClick() {
+    function handleOnClick() {
         let timeNow = new Date().getTime()
 
         if (timeNow - startTime < timeTreshold) {
             speedClick.push(timeNow - startTime)
             setStartTime(timeNow)
             setTotalClicks(prev => prev + 1)
-            if (speedClick.length >= 10) {
-                handleSendMessage([...speedClick])
+            if (speedClick.length >= 20) {
+                handleSendMessage([...speedClick], originLocation, props.username)
                 setSpeedClick([])
             }
         } else {
@@ -35,13 +35,13 @@ export default function SpeedClick(props: SpeedClickProps) {
         }
     }
 
-    async function handleSendMessage(speedClicks: Array<Number>) {
-        worker.postMessage({ userId: props.username, times: speedClick, origin: originLocation })
+    async function handleSendMessage(speedClicks: Array<Number>, origin: string, userId: string) {
+        worker.postMessage({ userId: userId, times: speedClicks, origin: origin })
     }
 
     return (
         <>
-            <div className="card w-96 bg-neutral shadow-xl">
+            <div className="card w-100 bg-neutral shadow-xl">
                 <div className="card-body">
                     <h2 className="card-title title">Quanto sei veloce a cliccare?</h2>
                     <p>Metti alla prova le tue abilità vedremo chi è il più veloce</p>
@@ -51,7 +51,7 @@ export default function SpeedClick(props: SpeedClickProps) {
                     <p>Click totali: {totalClicks}</p>
                 </div>
             </div>
-            <Chart />
+            <Chart username={props.username} />
         </>
     )
 }
