@@ -13,9 +13,14 @@ export default function Chart(props: SpeedClickProps) {
     const [classification, setClassification] = useState<Array<UserBestTime>>()
 
 
-    const ip = window.location.host
+    let webSocketConnection = window.location.host + '/clickspeed'
+    if (window.location.protocol === 'https:')
+        webSocketConnection = 'wss://' + webSocketConnection
+    else
+        webSocketConnection = 'ws://' + webSocketConnection
 
-    const { lastMessage, readyState } = useWebSocket('ws://' + ip + '/clickspeed');
+    console.log('WebSocket connection: ' + webSocketConnection)
+    const { lastMessage, readyState } = useWebSocket(webSocketConnection);
 
     useEffect(() => {
         if (lastMessage !== null) {
