@@ -10,6 +10,7 @@ export default function SpeedClick(props: SpeedClickProps) {
   const [startTime, setStartTime] = useState(0);
   const [speedClick, setSpeedClick] = useState<Array<number>>([]);
   const [totalClicks, setTotalClicks] = useState(0);
+  const [timeoutListener, setTimeoutListener] = useState<NodeJS.Timeout>();
 
   const worker: Worker = useMemo(() => new Worker("Worker.js"), []);
 
@@ -19,11 +20,16 @@ export default function SpeedClick(props: SpeedClickProps) {
     if (timeNow - startTime < timeTreshold) {
       speedClick.push(timeNow - startTime);
       setStartTime(timeNow);
+      window.clearTimeout(timeoutListener);
+      setTimeoutListener(
+        setTimeout(() => {
+          if (speedClick.length >= 0) {
+            handleSendMessage([...speedClick], originLocation, props.username);
+            setSpeedClick([]);
+          }
+        }, 300)
+      );
       setTotalClicks((prev) => prev + 1);
-      if (speedClick.length >= 20) {
-        handleSendMessage([...speedClick], originLocation, props.username);
-        setSpeedClick([]);
-      }
     } else {
       setStartTime(timeNow);
     }
