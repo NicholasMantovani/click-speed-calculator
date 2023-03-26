@@ -40,7 +40,6 @@ export default function Chart(props: SpeedClickProps) {
     const options: ApexOptions = {
         chart: {
             id: 'basic-char',
-            height: 400,
             type: 'bar',
             zoom: {
                 enabled: true
@@ -69,16 +68,11 @@ export default function Chart(props: SpeedClickProps) {
                     <h2 className="card-title title">Classifica</h2>
                     <p>Stato websocket: {connectionStatus}</p>
                     <div className="card-actions justify-center p-5">
-                        <ul className="menu bg-base-100 w-56 rounded-box">
-                            {classification && classification.map(userBestTime => (
-                                <li className={props.username === userBestTime.userId ? 'text-xl font-extrabold' : undefined} key={userBestTime.userId}> {userBestTime.time}ms - {userBestTime.user} </li>
-                            ))}
-                        </ul>
                         <ReactApexChart
                             options={options}
                             series={seriesClicks}
                             type="bar"
-                            height={350}
+                            width={450}
                         />
                     </div>
 
@@ -93,6 +87,11 @@ export default function Chart(props: SpeedClickProps) {
                                 </div>)
                         })}
                     </div>
+                    <ul className="menu bg-base-100 rounded-box">
+                        {classification && classification.map(userBestTime => (
+                            <li className={props.username === userBestTime.userId ? 'text-xl font-extrabold' : undefined} key={userBestTime.userId}> {userBestTime.time}ms - {userBestTime.user} </li>
+                        ))}
+                    </ul>
                 </div>
             </div>
         </div>
