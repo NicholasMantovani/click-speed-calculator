@@ -1,4 +1,3 @@
-
 import { ApexOptions } from "apexcharts";
 import { useState, useEffect } from "react";
 import ReactApexChart from "react-apexcharts";
@@ -6,100 +5,112 @@ import useWebSocket, { ReadyState } from "react-use-websocket";
 import { Data, SpeedClickProps, UserBestTime } from "../types/types";
 
 export default function Chart(props: SpeedClickProps) {
+  const [categories, setCategories] = useState<Array<number>>([]);
+  const [series, setSeries] = useState<Array<number>>([]);
+  const [info, setInfo] = useState<any>({});
+  const [classification, setClassification] = useState<Array<UserBestTime>>([]);
 
-    const [categories, setCategories] = useState<Array<number>>([])
-    const [series, setSeries] = useState<Array<number>>([])
-    const [info, setInfo] = useState<any>()
-    const [classification, setClassification] = useState<Array<UserBestTime>>()
+  let webSocketConnection = window.location.host + "/clickspeed";
+  if (window.location.protocol === "https:")
+    webSocketConnection = "wss://" + webSocketConnection;
+  else webSocketConnection = "ws://" + webSocketConnection;
 
+  console.log("WebSocket connection: " + webSocketConnection);
+  const { lastMessage, readyState } = useWebSocket(webSocketConnection);
 
-    let webSocketConnection = window.location.host + '/clickspeed'
-    if (window.location.protocol === 'https:')
-        webSocketConnection = 'wss://' + webSocketConnection
-    else
-        webSocketConnection = 'ws://' + webSocketConnection
+  useEffect(() => {
+    if (lastMessage !== null) {
+      const data = JSON.parse(lastMessage.data) as Data;
+      setCategories(data.payload.x);
+      setSeries(data.payload.y);
+      setInfo(data.payload.info);
+      setClassification(data.payload.classification);
+    }
+  }, [lastMessage]);
 
-    console.log('WebSocket connection: ' + webSocketConnection)
-    const { lastMessage, readyState } = useWebSocket(webSocketConnection);
+  const connectionStatus = {
+    [ReadyState.CONNECTING]: "Connecting",
+    [ReadyState.OPEN]: "Open",
+    [ReadyState.CLOSING]: "Closing",
+    [ReadyState.CLOSED]: "Closed",
+    [ReadyState.UNINSTANTIATED]: "Uninstantiated",
+  }[readyState];
 
-    useEffect(() => {
-        if (lastMessage !== null) {
-            const data = JSON.parse(lastMessage.data) as Data
-            setCategories(data.payload.x)
-            setSeries(data.payload.y)
-            setInfo(data.payload.info)
-            setClassification(data.payload.classification)
+  const options: ApexOptions = {
+    chart: {
+      id: "basic-char",
+      type: "bar",
+      zoom: {
+        enabled: true,
+      },
+    },
+    plotOptions: {
+      bar: {
+        borderRadius: 4,
+        horizontal: false,
+      },
+    },
+    xaxis: {
+      categories: categories,
+    },
+  };
 
-        }
-    }, [lastMessage]);
+  const seriesClicks = [
+    {
+      name: "Clicks",
+      data: series,
+    },
+  ];
 
-    const connectionStatus = {
-        [ReadyState.CONNECTING]: 'Connecting',
-        [ReadyState.OPEN]: 'Open',
-        [ReadyState.CLOSING]: 'Closing',
-        [ReadyState.CLOSED]: 'Closed',
-        [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
-    }[readyState];
+  return (
+    <div className="pt-5">
+      <div className="card w-100 bg-neutral shadow-xl">
+        <div className="card-body">
+          <h2 className="card-title title">Statistiche</h2>
+          <p>Stato websocket: {connectionStatus}</p>
+          <div className="card-actions justify-center p-5">
+            <ReactApexChart
+              options={options}
+              series={seriesClicks}
+              type="bar"
+              width={450}
+            />
+          </div>
 
-
-    const options: ApexOptions = {
-        chart: {
-            id: 'basic-char',
-            type: 'bar',
-            zoom: {
-                enabled: true
-            },
-        },
-        plotOptions: {
-            bar: {
-                borderRadius: 4,
-                horizontal: false,
-            }
-        },
-        xaxis: {
-            categories: categories
-        }
-    };
-
-    const seriesClicks = [{
-        name: "Clicks",
-        data: series
-    }]
-
-    return (
-        <div className="pt-5">
-            <div className="card w-100 bg-neutral shadow-xl">
-                <div className="card-body">
-                    <h2 className="card-title title">Classifica</h2>
-                    <p>Stato websocket: {connectionStatus}</p>
-                    <div className="card-actions justify-center p-5">
-                        <ReactApexChart
-                            options={options}
-                            series={seriesClicks}
-                            type="bar"
-                            width={450}
-                        />
-                    </div>
-
-                    <div className="stats shadowstats-vertical shadow">
-                        {info && Array.from(Object.keys(info)).map((key) => {
-                            const value = info[key] as string
-                            return (
-                                <div className="stat">
-                                    <div className="stat-value">{key}</div>
-                                    <div className="stat-title">{value}</div>
-
-                                </div>)
-                        })}
-                    </div>
-                    <ul className="menu bg-base-100 rounded-box">
-                        {classification && classification.map(userBestTime => (
-                            <li className={props.username === userBestTime.userId ? 'text-xl font-extrabold' : undefined} key={userBestTime.userId}> {userBestTime.time}ms - {userBestTime.user} </li>
-                        ))}
-                    </ul>
-                </div>
+          {info && (
+            <div className="stats shadowstats-vertical shadow">
+              {Array.from(Object.keys(info)).map((key) => {
+                const value = info[key] as string;
+                return (
+                  <div className="stat">
+                    <div className="stat-value">{key}</div>
+                    <div className="stat-title p-2">{value}</div>
+                  </div>
+                );
+              })}
             </div>
+          )}
+          {classification && classification.length > 0 && (
+            <ul className="p-3 menu bg-base-100 rounded-box">
+              <div className="stat-value pb-3">Classifica</div>
+              {classification &&
+                classification.map((userBestTime) => (
+                  <li
+                    className={
+                      props.username === userBestTime.userId
+                        ? "text-xl font-extrabold"
+                        : undefined
+                    }
+                    key={userBestTime.userId}
+                  >
+                    {" "}
+                    {userBestTime.time}ms - {userBestTime.user}{" "}
+                  </li>
+                ))}
+            </ul>
+          )}
         </div>
-    )
-
+      </div>
+    </div>
+  );
 }
